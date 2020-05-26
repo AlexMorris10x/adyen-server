@@ -32,10 +32,12 @@ const ItemWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
+
 const BuyButton1Wrapper = styled.button`
   display: flex;
   justify-content: space-evenly;
 `;
+
 const BuyButton2Wrapper = styled.button`
   display: flex;
   justify-content: space-evenly;
