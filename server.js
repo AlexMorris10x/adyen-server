@@ -20,10 +20,8 @@ app.use(express.static(path.join(__dirname, "build")));
 // enables environment variables by
 // parsing the .env file and assigning it to process.env
 dotenv.config({
-  path: "./.env",
+  path: "./.env"
 });
-
-
 
 // Adyen Node.js API library boilerplate (configuration, etc.)
 const config = new Config();
@@ -35,8 +33,19 @@ const checkout = new CheckoutAPI(client);
 /* ################# API ENDPOINTS ###################### */
 
 // Health check
-app.get("/api/health", (req, res) => {
-  return res.send("ok");
+// app.post("/api/health", (req, res) => {
+//   console.log('received')
+// });
+
+const API_KEY= "AQEyhmfxKIjNbxNCw0m/n3Q5qf3VaY9UCJ1+XWZe9W27jmlZiiJFKDz0PYWR0BvTuER37O8QwV1bDb7kfNy1WIxIIkxgBw==-T6pWfGdlAYOQiCvQy3muGCLRlnXahDwuPFzCzFRJeY8=-Y#56):KmAuw_;Fg6"
+const MERCHANT_ACCOUNT= "AlexMorris"
+
+app.post("/api/authorizePayment", async (req, res) => {
+  console.log('received')
+  // payload = req.body;
+  // console.log(payload)
+  // console.log(req.body)
+  console.log(req)
 });
 
 // Handle all redirects from payment type
@@ -64,9 +73,7 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
         res.redirect(`${originalHost}/status/failed`);
         break;
       default:
-        res.redirect(
-          `${originalHost}/status/error?reason=${response.resultCode}`
-        );
+        res.redirect(`${originalHost}/status/error?reason=${response.resultCode}`);
         break;
     }
   } catch (err) {
@@ -79,7 +86,7 @@ app.all("/api/handleShopperRedirect", async (req, res) => {
 app.get("/api/config", (req, res) => {
   res.json({
     environment: "test",
-    originKey: process.env.ORIGIN_KEY,
+    originKey: process.env.ORIGIN_KEY
   });
 });
 
@@ -88,7 +95,7 @@ app.post("/api/getPaymentMethods", async (req, res) => {
   try {
     const response = await checkout.paymentMethods({
       channel: "Web",
-      merchantAccount: process.env.MERCHANT_ACCOUNT,
+      merchantAccount: process.env.MERCHANT_ACCOUNT
     });
     res.json(response);
   } catch (err) {
@@ -100,8 +107,7 @@ app.post("/api/getPaymentMethods", async (req, res) => {
 // Submitting a payment
 app.post("/api/initiatePayment", async (req, res) => {
   const currency = findCurrency(req.body.paymentMethod.type);
-  const shopperIP =
-    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const shopperIP = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   try {
     // Ideally the data passed here should be computed based on business logic
@@ -114,32 +120,24 @@ app.post("/api/initiatePayment", async (req, res) => {
       channel: "Web",
       additionalData: {
         // @ts-ignore
-        allow3DS2: true,
+        allow3DS2: true
       },
       returnUrl: "http://localhost:8080/api/handleShopperRedirect",
       browserInfo: req.body.browserInfo,
       paymentMethod: req.body.paymentMethod,
       billingAddress: req.body.billingAddress,
-      origin: req.body.origin,
+      origin: req.body.origin
     });
     let paymentMethodType = req.body.paymentMethod.type;
     let resultCode = response.resultCode;
-    let redirectUrl =
-      response.redirect !== undefined ? response.redirect.url : null;
+    let redirectUrl = response.redirect !== undefined ? response.redirect.url : null;
     let action = null;
 
     if (response.action) {
       action = response.action;
-      res.cookie("paymentData", action.paymentData, {
-        maxAge: 900000,
-        httpOnly: true,
-      });
+      res.cookie("paymentData", action.paymentData, { maxAge: 900000, httpOnly: true });
       const originalHost = new URL(req.headers["referer"]);
-      originalHost &&
-        res.cookie("originalHost", originalHost.origin, {
-          maxAge: 900000,
-          httpOnly: true,
-        });
+      originalHost && res.cookie("originalHost", originalHost.origin, { maxAge: 900000, httpOnly: true });
     }
 
     res.json({ paymentMethodType, resultCode, redirectUrl, action });
