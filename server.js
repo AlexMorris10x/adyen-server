@@ -23,6 +23,8 @@ dotenv.config({
   path: "./.env",
 });
 
+
+
 // Adyen Node.js API library boilerplate (configuration, etc.)
 const config = new Config();
 config.apiKey = process.env.API_KEY;

@@ -2,6 +2,10 @@ import React from "react";
 import styled from "styled-components";
 
 function App(): any {
+  const sendToServer = () => {
+    
+    console.log('hi I am an API request')
+  }
   return (
     <>
       <TitleWrapper>My Store front!</TitleWrapper>
@@ -9,13 +13,13 @@ function App(): any {
         <div>
           <div>Item 1</div>
           <div>My cool item</div>
-          <BuyButton1Wrapper>Press</BuyButton1Wrapper>
+          <BuyButton1Wrapper onClick={() => sendToServer()}>Press</BuyButton1Wrapper>
         </div>
-        <div>
+        {/* <div>
           <div>Item 2</div>
           <div>My cool item</div>
           <BuyButton2Wrapper>Press</BuyButton2Wrapper>
-        </div>
+        </div> */}
       </ItemWrapper>
     </>
   );
@@ -38,7 +42,7 @@ const BuyButton1Wrapper = styled.button`
   justify-content: space-evenly;
 `;
 
-const BuyButton2Wrapper = styled.button`
-  display: flex;
-  justify-content: space-evenly;
-`;
+// const BuyButton2Wrapper = styled.button`
+//   display: flex;
+//   justify-content: space-evenly;
+// `;
