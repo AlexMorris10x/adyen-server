@@ -37,8 +37,6 @@ const checkout = new CheckoutAPI(client);
 //   console.log('received')
 // });
 
-const API_KEY= "AQEyhmfxKIjNbxNCw0m/n3Q5qf3VaY9UCJ1+XWZe9W27jmlZiiJFKDz0PYWR0BvTuER37O8QwV1bDb7kfNy1WIxIIkxgBw==-T6pWfGdlAYOQiCvQy3muGCLRlnXahDwuPFzCzFRJeY8=-Y#56):KmAuw_;Fg6"
-const MERCHANT_ACCOUNT= "AlexMorris"
 
 app.post("/api/authorizePayment", async (req, res) => {
   console.log('received')
